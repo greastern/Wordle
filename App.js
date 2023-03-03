@@ -13,7 +13,7 @@ const copyArray = (arr) => {
 }
 
 export default function App() {
-  const word = "hello";
+  const word = "psalms";
   const letters = word.split(""); // Split based on nothing and that will return an array of characters
 
   const[rows, setRows] = useState(  //[value of state, setter of state]
@@ -53,11 +53,12 @@ export default function App() {
     }
   };
 
-  const isCellActive = (row,col) => {
+  const isCellActive = (row, col) => {
     return row == curRow && col == curCol;
   };
 
-  const getCellBGColor = (letter, row, col) => {
+  const getCellBGColor = (row, col) => {
+    const letter = rows[row][col];
     // checking that the row the user is currently in is more or equal to the letter being currently rendered
     if (row >= curRow) {
       return colors.black;
@@ -70,6 +71,18 @@ export default function App() {
     }
     return colors.darkgrey;
   };
+
+  const getAllLettersWithColor =(color) => { 
+    return rows.flatMap((row, i) => 
+      row.filter((cell, j) => getCellBGColor(i, j) == color)
+    );
+  }
+
+  const greenCaps = getAllLettersWithColor (colors.primary);
+  const yellownCaps = getAllLettersWithColor (colors.secondary);
+  const greyCaps = getAllLettersWithColor (colors.darkgrey);
+
+
 
   return (
    <SafeAreaView style={styles.container}>
@@ -93,7 +106,7 @@ export default function App() {
                   borderColor: isCellActive(i,j) 
                     ? colors.lightgrey 
                     : colors.darkgrey,
-                  backgroundColor: getCellBGColor(letter, i, j),
+                  backgroundColor: getCellBGColor(i, j),
                 },
               ]}
             > 
@@ -104,7 +117,12 @@ export default function App() {
         ))}
       </ScrollView>
 
-      <Keyboard onKeyPressed={onKeyPressed}/>
+      <Keyboard 
+        onKeyPressed={onKeyPressed}
+        greenCaps = {greenCaps}
+        yellowCaps = {yellownCaps}
+        greyCaps = {greyCaps}
+      />
     </SafeAreaView>
   );
 }
