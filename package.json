@@ -10,16 +10,17 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "~47.0.12",
-    "expo-status-bar": "~1.4.2",
-    "react": "18.1.0",
-    "react-native": "0.70.5",
-    "react-native-web": "~0.18.9",
-    "react-dom": "18.1.0",
-    "@expo/webpack-config": "^0.17.2"
+    "@expo/webpack-config": "^18.0.1",
+    "expo": "^48.0.0",
+    "expo-clipboard": "~4.1.2",
+    "expo-status-bar": "~1.4.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.71.3",
+    "react-native-web": "~0.18.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.20.0"
   },
   "private": true
 }

@@ -1,17 +1,22 @@
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
-import {colors, CLEAR, ENTER} from "./src/constants";
+import { 
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Alert
+} from "react-native";
+import {colors, CLEAR, ENTER, colorsToEmoji} from "./src/constants";
 import Keyboard from "./src/components/Keyboard";
-
-
+import * as Clipboard from "expo-clipboard";
 // Making number of columns which will be number of tries
-const numOfTries = 6;
+const numOfTries = 5;
 
 const copyArray = (arr) => {
   return [...(arr.map(rows => [...rows]))]
 }
-
 export default function App() {
   const word = "psalms";
   const letters = word.split(""); // Split based on nothing and that will return an array of characters
@@ -21,8 +26,51 @@ export default function App() {
   );   
   const [curRow, setCurRow] = useState(0);
   const[curCol, setCurCol] = useState(0);
+  const [gameState, setGameState] = useState('playing') // game states are won, lost, playing, playing being the current until won or lost
+
+  useEffect(() => {
+    if (curRow > 0) {
+      checkGameState();
+    }
+  }, [curRow]);
+
+  const checkGameState = () => {
+    if (checkIfWon() && gameState != 'won') {
+      Alert.alert("Hooraaay", "YOU WON!!", [{ text: 'Share', onPress: shareScore}]);
+      setGameState('won');
+    } else if (checkIfLost() && gameState != 'lost') {
+      Alert.alert("boo", "try again tomorrow!");
+      setGameState('lost');
+    }
+  };
+  const shareScore = () => {
+    const textMap = rows
+      .map((row, i) => 
+        row.map((cell,j) => colorsToEmoji[getCellBGColor(i,j)]).join ("")
+      )
+      .filter((row) => row)
+      .join("\n");
+    const textToShare = `NEYR WORDLE \n${textMap}`;
+  
+    Clipboard.setString(textToShare);
+    Alert.alert("Copied Successfully", "Share your score on your social media");
+  };
+
+  const checkIfWon = () => {
+    const row = rows[curRow - 1];
+
+    return row.every((letter, i) => letter == letters[i])
+  };
+  
+  const checkIfLost =  () => {
+    return !checkIfWon() && curRow == rows.length;
+  };
 
   const onKeyPressed = (key) => {
+    if (gameState != "playing") {
+      return;
+    }
+
     const updatedRows = copyArray(rows);
 
     // Clear button going back current columnn one cell behind
@@ -143,7 +191,6 @@ const styles = StyleSheet.create({
   map: {
     marginVertical: 20,
     alignSelf: "stretch",
-    height: 100,
   },
   row: {
 
