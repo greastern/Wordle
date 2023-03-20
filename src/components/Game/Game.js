@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Text, View, ScrollView, Alert } from "react-native";
-import {CLEAR, ENTER, colorsToEmoji} from "../../constants";
+import { colors, CLEAR, ENTER, colorsToEmoji } from "../../constants";
 import Keyboard from "../Keyboard";
 import * as Clipboard from "expo-clipboard";
 import words from "../../words";
